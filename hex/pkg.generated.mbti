@@ -1,0 +1,91 @@
+// Generated using `moon info`, DON'T EDIT IT
+package "wbgxiaosu/hexgrid/hex"
+
+import {
+  "moonbitlang/core/debug",
+}
+
+// Values
+pub let directions : Array[Hex]
+
+pub let flat_layout : Layout
+
+pub let offset_layouts : Array[OffsetLayout]
+
+pub let orientations : Array[Orientation]
+
+pub let pointy_layout : Layout
+
+// Errors
+
+// Types and methods
+pub struct Hex {
+  q : Int32
+  r : Int32
+} derive(Eq, Hash, @debug.Debug)
+pub fn Hex::cube_round((Double, Double, Double)) -> Self
+pub fn Hex::distance(Self, Self) -> Int32
+pub fn Hex::equal(Self, Self) -> Bool
+pub fn Hex::from_pixel_round(Double, Double, Layout) -> Self
+pub fn Hex::hash(Self) -> Int32
+pub fn Hex::hash_combine(Self, Hasher) -> Unit
+pub fn Hex::label(Self) -> String
+pub fn Hex::lerp(Self, Self, Double) -> (Double, Double, Double)
+pub fn Hex::line(Self, Self) -> Array[Self]
+pub fn Hex::make(Int32, Int32) -> Self
+pub fn Hex::neighbor(Self, Int32) -> Self
+pub fn Hex::not_equal(Self, Self) -> Bool
+pub fn Hex::op_add(Self, Self) -> Self
+pub fn Hex::op_mul(Self, Int32) -> Self
+pub fn Hex::op_sub(Self, Self) -> Self
+pub fn Hex::range(Self, Int32) -> Array[Self]
+pub fn Hex::reflect(Self) -> Self
+pub fn Hex::ring(Self, Int32) -> Array[Self]
+pub fn Hex::rotate(Self, Int32) -> Self
+pub fn Hex::s(Self) -> Int32
+pub fn Hex::spiral(Self, Int32, Int32) -> Array[Self]
+pub fn Hex::to_repr(Self) -> @debug.Repr
+
+pub struct Layout {
+  orientation : Orientation
+  size : (Double, Double)
+  origin : (Double, Double)
+} derive(Eq, @debug.Debug)
+pub fn Layout::axial_to_pixel(Self, Hex) -> (Double, Double)
+pub fn Layout::equal(Self, Self) -> Bool
+pub fn Layout::from_bounds(Orientation, Double, Double) -> Self
+pub fn Layout::not_equal(Self, Self) -> Bool
+pub fn Layout::pixel_to_axial(Self, Double, Double) -> (Double, Double)
+pub fn Layout::to_repr(Self) -> @debug.Repr
+
+pub struct OffsetCoord {
+  col : Int32
+  row : Int32
+} derive(Eq, @debug.Debug)
+pub fn OffsetCoord::equal(Self, Self) -> Bool
+pub fn OffsetCoord::from_axial(Hex, OffsetLayout) -> Self
+pub fn OffsetCoord::not_equal(Self, Self) -> Bool
+pub fn OffsetCoord::to_axial(Self, OffsetLayout) -> Hex
+pub fn OffsetCoord::to_repr(Self) -> @debug.Repr
+
+pub enum OffsetLayout {
+  OddR
+  EvenR
+  OddQ
+  EvenQ
+} derive(Eq, @debug.Debug)
+pub fn OffsetLayout::equal(Self, Self) -> Bool
+pub fn OffsetLayout::not_equal(Self, Self) -> Bool
+pub fn OffsetLayout::to_repr(Self) -> @debug.Repr
+
+pub enum Orientation {
+  Pointy
+  Flat
+} derive(Eq, @debug.Debug)
+pub fn Orientation::equal(Self, Self) -> Bool
+pub fn Orientation::not_equal(Self, Self) -> Bool
+pub fn Orientation::to_repr(Self) -> @debug.Repr
+
+// Type aliases
+
+// Traits

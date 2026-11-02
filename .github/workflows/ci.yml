@@ -1,0 +1,67 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        backend: [wasm, wasm-gc, native]
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install MoonBit toolchain
+        run: |
+          curl -fsSL https://cli.moonbitlang.com/install/unix.sh | bash
+          echo "$HOME/.moon/bin" >> "$GITHUB_PATH"
+
+      - name: Refresh registry index
+        run: moon update
+
+      - name: Toolchain version
+        run: moon version --all
+
+      - name: Assert moonc >= 0.10.16
+        run: |
+          installed=$(moonc -v | grep -oE 'v[0-9]+\.[0-9]+\.[0-9]+' | head -1 | tr -d 'v')
+          echo "installed moonc: $installed"
+          if [ "$(printf '%s\n' "0.10.16" "$installed" | sort -V | head -1)" != "0.10.16" ]; then
+            echo "::error::moonc $installed is below the required 0.10.16"
+            exit 1
+          fi
+
+      - name: Check formatting
+        run: moon fmt --check
+
+      - name: moon check
+        run: moon check --target ${{ matrix.backend }} --deny-warn
+
+      - name: moon build
+        run: moon build --target ${{ matrix.backend }}
+
+      - name: moon test
+        run: moon test --target ${{ matrix.backend }} --deny-warn
+
+  consumer:
+    # independent consumer module: depends on the published mooncakes
+    # package name; moon.work redirects it to the current source, so CI
+    # continuously proves the library is consumable from outside.
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install MoonBit toolchain
+        run: |
+          curl -fsSL https://cli.moonbitlang.com/install/unix.sh | bash
+          echo "$HOME/.moon/bin" >> "$GITHUB_PATH"
+
+      - name: Refresh registry index
+        run: moon update
+
+      - name: Run the consumer example against the library
+        working-directory: examples/consumer
+        run: moon run . --target wasm-gc --deny-warn

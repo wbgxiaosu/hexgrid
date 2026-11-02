@@ -1,0 +1,30 @@
+// Generated using `moon info`, DON'T EDIT IT
+package "wbgxiaosu/hexgrid/path"
+
+import {
+  "moonbitlang/core/debug",
+  "wbgxiaosu/hexgrid/hex",
+}
+
+// Values
+pub fn find_path(@hex.Hex, @hex.Hex, (@hex.Hex) -> Bool, (@hex.Hex, @hex.Hex) -> Double) -> Array[@hex.Hex]? raise
+
+// Errors
+
+// Types and methods
+pub struct Reachability {
+  cost : Map[@hex.Hex, Double]
+  came_from : Map[@hex.Hex, @hex.Hex]
+  source : @hex.Hex
+} derive(Eq, @debug.Debug)
+pub fn Reachability::compute(@hex.Hex, Double, (@hex.Hex) -> Bool, (@hex.Hex, @hex.Hex) -> Double) -> Self raise
+pub fn Reachability::cost_to(Self, @hex.Hex) -> Double?
+pub fn Reachability::equal(Self, Self) -> Bool
+pub fn Reachability::not_equal(Self, Self) -> Bool
+pub fn Reachability::path_to(Self, @hex.Hex) -> Array[@hex.Hex]?
+pub fn Reachability::reached(Self) -> Array[@hex.Hex]
+pub fn Reachability::to_repr(Self) -> @debug.Repr
+
+// Type aliases
+
+// Traits

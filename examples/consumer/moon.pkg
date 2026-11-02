@@ -1,0 +1,7 @@
+import {
+  "wbgxiaosu/hexgrid/hex",
+  "wbgxiaosu/hexgrid/path",
+  "wbgxiaosu/hexgrid/fov",
+}
+
+pkgtype(kind: "executable")
