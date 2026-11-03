@@ -49,4 +49,31 @@ fn main raise {
     sb.write_string(c.label())
   }
   println("visible cells (\{seen.length()}): \{sb}")
+
+  // 4. symmetric FOV: bidirectional line of sight
+  let sym = @fov.compute_symmetric(a, 2, transparent)
+  println("symmetric fov: \{sym.length()} cells (one-way saw \{seen.length()})")
+
+  // 5. multi-source Dijkstra: two friendly cities, nearest-source map
+  let multi = @path.Reachability::compute_multi(
+    [@hex.Hex::make(-2, 1), @hex.Hex::make(2, -1)],
+    10.0,
+    fn(_c) { true },
+    fn(_f, _t) { 1.0 },
+  )
+  match multi.cost_to(a) {
+    Some(c) =>
+      println("multi-source: origin is \{c} steps from the nearest city")
+    None => println("multi-source: origin unreachable")
+  }
+
+  // 6. region-shaped hex map with ASCII rendering
+  let terrain : @hexmap.HexMap[String] = @hexmap.HexMap::make(
+    @hexmap.Region::rectangle(4, 3),
+    ".",
+  )
+  terrain.set(@hex.Hex::make(0, 0), "X")
+  terrain.set(@hex.Hex::make(2, 1), "~")
+  println("hexmap 4x3 rectangle (X you, ~ water):")
+  println(terrain.render(fn(v) { v }))
 }

@@ -1,5 +1,6 @@
 import {
   "wbgxiaosu/hexgrid/fov",
+  "wbgxiaosu/hexgrid/hexmap",
   "wbgxiaosu/hexgrid/hex",
   "wbgxiaosu/hexgrid/path",
 }
