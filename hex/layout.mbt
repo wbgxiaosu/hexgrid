@@ -1,24 +1,26 @@
 ///|
 /// Whether the hexagons of a layout have a corner (pointy) or a flat
 /// edge on top.
+#derive(Eq, Debug)
 pub enum Orientation {
   /// Pointy-top hexagons (corner up).
   Pointy
   /// Flat-top hexagons (edge up).
   Flat
-} derive(Eq, Debug)
+}
 
 ///|
 /// A hexagonal layout: how cells map to the 2D plane. `size` is the
 /// distance from the centre to a corner. Pixel conversions follow the
 /// matrix formulation of Red Blob Games ("Hexagonal Grids: Layout").
+#derive(Eq, Debug)
 pub struct Layout {
   orientation : Orientation
   /// Centre-to-corner distance; both components are usually equal.
   size : (Double, Double)
   /// Pixel position of the origin cell.
   origin : (Double, Double)
-} derive(Eq, Debug)
+}
 
 ///|
 pub extend Orientation with Eq::{equal, not_equal}

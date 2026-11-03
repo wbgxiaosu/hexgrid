@@ -2,6 +2,7 @@
 /// Which offset layout to use when mapping between axial and
 /// row/column coordinates. Four variants cover all conventions named
 /// by Red Blob Games ("Offset coordinates").
+#derive(Eq, Debug)
 pub enum OffsetLayout {
   /// Odd rows shifted right ("odd-r", pointy-top).
   OddR
@@ -11,15 +12,16 @@ pub enum OffsetLayout {
   OddQ
   /// Even columns shifted down ("even-q", flat-top).
   EvenQ
-} derive(Eq, Debug)
+}
 
 ///|
 /// A cell addressed in offset coordinates: a plain `col`/`row` pair as
 /// used by rectangular storage and most tile maps.
+#derive(Eq, Debug)
 pub struct OffsetCoord {
   col : Int32
   row : Int32
-} derive(Eq, Debug)
+}
 
 ///|
 /// Converts axial coordinates to offset coordinates under `layout`.

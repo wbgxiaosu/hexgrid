@@ -34,6 +34,7 @@ pub fn Hex::lerp(Self, Self, Double) -> (Double, Double, Double)
 pub fn Hex::line(Self, Self) -> Array[Self]
 pub fn Hex::make(Int32, Int32) -> Self
 pub fn Hex::neighbor(Self, Int32) -> Self
+pub fn Hex::neighbors(Self) -> Array[Self]
 pub fn Hex::not_equal(Self, Self) -> Bool
 pub fn Hex::op_add(Self, Self) -> Self
 pub fn Hex::op_mul(Self, Int32) -> Self

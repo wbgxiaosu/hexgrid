@@ -10,5 +10,5 @@ license = "Apache-2.0"
 preferred_target = "wasm-gc"
 
 import {
-  "wbgxiaosu/hexgrid@0.1.1",
+  "wbgxiaosu/hexgrid@0.1.2",
 }

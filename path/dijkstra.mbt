@@ -71,6 +71,7 @@ fn[T] Heap::pop(self : Heap[T]) -> T? {
 /// The result of a breadth/cost-first flood from a source cell:
 /// the cheapest known cost per reachable cell plus a back-pointer to
 /// the previous cell on a cheapest path.
+#derive(Eq, Debug)
 pub struct Reachability {
   /// Cost from the source to each reachable cell (source itself has
   /// cost 0). Cells not reachable within `max_cost` are absent.
@@ -80,7 +81,7 @@ pub struct Reachability {
   came_from : Map[@hex.Hex, @hex.Hex]
   /// The source cell.
   source : @hex.Hex
-} derive(Eq, Debug)
+}
 
 ///|
 pub extend Reachability with Eq::{equal, not_equal}

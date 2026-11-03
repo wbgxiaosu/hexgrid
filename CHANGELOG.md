@@ -4,6 +4,15 @@ All notable changes to this project are documented in this file.
 The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/)
 and the project adheres to [Semantic Versioning](https://semver.org/).
 
+## [0.1.2] - 2026-11-03
+
+### Changed
+
+- Migrated all `derive(...)` clauses to the new `#derive(...)`
+  attribute syntax (moonc >= 0.10.19), as required by the latest
+  MoonBit toolchain where the trailing form is deprecated. The CI
+  toolchain assertion now enforces moonc >= 0.10.19 accordingly.
+
 ## [0.1.1] - 2026-11-03
 
 ### Added

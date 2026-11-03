@@ -25,12 +25,12 @@ jobs:
       - name: Toolchain version
         run: moon version --all
 
-      - name: Assert moonc >= 0.10.16
+      - name: Assert moonc >= 0.10.19
         run: |
           installed=$(moonc -v | grep -oE 'v[0-9]+\.[0-9]+\.[0-9]+' | head -1 | tr -d 'v')
           echo "installed moonc: $installed"
-          if [ "$(printf '%s\n' "0.10.16" "$installed" | sort -V | head -1)" != "0.10.16" ]; then
-            echo "::error::moonc $installed is below the required 0.10.16"
+          if [ "$(printf '%s\n' "0.10.19" "$installed" | sort -V | head -1)" != "0.10.19" ]; then
+            echo "::error::moonc $installed is below the required 0.10.19"
             exit 1
           fi
 

@@ -10,10 +10,11 @@
 /// (<https://www.red-bean.com/robert/publications/hex-grids/>), whose
 /// treatment of axial/cube/offset systems is the de-facto industry
 /// reference. See docs/RULES_REFERENCES.md for details.
+#derive(Eq, Debug, Hash)
 pub struct Hex {
   q : Int32
   r : Int32
-} derive(Eq, Debug, Hash)
+}
 
 ///|
 pub extend Hex with @moonbitlang/core/debug.Debug::{to_repr}

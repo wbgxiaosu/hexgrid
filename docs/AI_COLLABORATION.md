@@ -23,7 +23,7 @@ quality. The division of work:
   [RULES_REFERENCES.md](RULES_REFERENCES.md), and no third-party code
   or text is copied.
 - **Quality gates.** `moon check --deny-warn`, `moon test --deny-warn`
-  on three backends, `moon fmt --check`, a hard `moonc >= 0.10.16`
+  on three backends, `moon fmt --check`, a hard `moonc >= 0.10.19`
   assertion, and an independent consumer module (examples/consumer)
   that CI runs on every push.
 - **Acceptance of every change.** All tests, docs and commits are

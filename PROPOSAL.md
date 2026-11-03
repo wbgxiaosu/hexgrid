@@ -13,7 +13,7 @@
 
 本项目为十一月球赛季全新立项，全部开发在本赛期内完成：
 
-- 新建仓库、CI（三后端 + moonc ≥ 0.10.16 断言 + fmt 门禁 + 独立消费者验证）与全套文档；
+- 新建仓库、CI（三后端 + moonc ≥ 0.10.19 断言 + fmt 门禁 + 独立消费者验证）与全套文档；
 - `hex` 包：axial/cube/offset 坐标互转、距离、直线（lerp+立方取整）、环、螺旋、填充范围、60° 旋转、镜像、像素布局（pointy/flat）双向转换；
 - `path` 包：自研二叉堆 + Dijkstra 代价泛洪（自定义地形代价与 max_cost 截断）+ A* 寻路与路径回溯；
 - `fov` 包：视线遮挡语义的六角格视野判定；
@@ -32,7 +32,7 @@
 ## 5. 测试与质量基建
 
 - 21 个白盒测试覆盖核心路径：参考值断言（Red Blob Games 案例）、往返一致性（offset 四布局 × 全格、像素双向全格）、公理式性质（距离对称性、相邻性、路径合法性）与经典局面（绕墙、封死、变代价地形）；
-- CI 四 job：wasm/wasm-gc/native 三后端 `moon check --deny-warn` + `moon build` + `moon test --deny-warn`，`moon fmt --check` 格式门禁，moonc ≥ 0.10.16 硬断言，外加独立消费者工程（examples/consumer）每次 push 验证"可安装可用"。
+- CI 四 job：wasm/wasm-gc/native 三后端 `moon check --deny-warn` + `moon build` + `moon test --deny-warn`，`moon fmt --check` 格式门禁，moonc ≥ 0.10.19 硬断言，外加独立消费者工程（examples/consumer）每次 push 验证"可安装可用"。
 
 ## 6. 开源合规
 

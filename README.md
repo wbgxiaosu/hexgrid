@@ -29,7 +29,7 @@ dependency-free APIs.
 
 ## Installation
 
-Requires the MoonBit toolchain (moonc ≥ 0.10.16). Install the library
+Requires the MoonBit toolchain (moonc ≥ 0.10.19). Install the library
 from [mooncakes.io](https://mooncakes.io/docs/#/wbgxiaosu/hexgrid):
 
 ```bash
@@ -105,7 +105,7 @@ cd examples/consumer && moon run .
 ```
 
 CI runs `moon check --deny-warn` and `moon test --deny-warn` on the
-wasm, wasm-gc and native backends, asserts moonc ≥ 0.10.16, checks
+wasm, wasm-gc and native backends, asserts moonc ≥ 0.10.19, checks
 formatting with `moon fmt --check`, and executes the consumer example
 on every push.
 
