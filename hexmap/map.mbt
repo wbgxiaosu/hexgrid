@@ -113,3 +113,72 @@ pub fn[T] HexMap::values(self : HexMap[T]) -> Array[T] {
   }
   acc
 }
+
+///|
+/// Renders the map as an ASCII grid.
+///
+/// For `Rectangle` and `Parallelogram` regions each line is one row
+/// of cells, rendered by the caller-supplied `render` function and
+/// separated by spaces; odd rows of a rectangle are indented by one
+/// space to suggest the odd-r stagger. For any other region the map
+/// falls back to one `q,r value` line per occupied cell in
+/// deterministic order. Unwritten cells of the region render as `.`.
+pub fn[T] HexMap::render(self : HexMap[T], render : (T) -> String) -> String {
+  match self.region {
+    Rectangle(w, h) => {
+      let rows : Array[String] = []
+      for row in 0..<h {
+        let line = StringBuilder()
+        if row & (1 == 1) {
+          line.write_string(" ")
+        }
+        for col in 0..<w {
+          if col > 0 {
+            line.write_string(" ")
+          }
+          let q = col - (row - (row & 1)) / 2
+          let cell = @hex.Hex::make(q, row)
+          line.write_string(
+            match self.cells.get(cell) {
+              Some(v) => render(v)
+              None => "."
+            },
+          )
+        }
+        rows.push(line.to_string())
+      }
+      String::concat_with(rows, "\n")
+    }
+    Parallelogram(w, h) => {
+      let rows : Array[String] = []
+      for q in 0..<w {
+        let line = StringBuilder()
+        for r in 0..<h {
+          if r > 0 {
+            line.write_string(" ")
+          }
+          let cell = @hex.Hex::make(q, r)
+          line.write_string(
+            match self.cells.get(cell) {
+              Some(v) => render(v)
+              None => "."
+            },
+          )
+        }
+        rows.push(line.to_string())
+      }
+      String::concat_with(rows, "\n")
+    }
+    _ => {
+      // generic fallback: deterministic occupied-cell listing
+      let lines : Array[String] = []
+      for c in self.occupied() {
+        match self.cells.get(c) {
+          Some(v) => lines.push("\{c.q},\{c.r} \{render(v)}")
+          None => ()
+        }
+      }
+      String::concat_with(lines, "\n")
+    }
+  }
+}

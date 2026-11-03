@@ -111,3 +111,44 @@ test "hexmap: make_empty starts with no stored values" {
   assert_eq(m.region(), Hexagon(2))
   assert_eq(m.get(@hex.Hex::make(0, 0)), None)
 }
+
+///|
+test "hexmap: render rectangle rows with odd-r stagger" {
+  let m : HexMap[String] = HexMap::make_empty(Region::rectangle(2, 2))
+  m.set(@hex.Hex::make(0, 0), "a")
+  m.set(@hex.Hex::make(1, 0), "b")
+  m.set(@hex.Hex::make(0, 1), "c")
+  m.set(@hex.Hex::make(1, 1), "d")
+  let out = m.render(fn(v) { v })
+  let lines = out.split("\n").collect()
+  assert_eq(lines.count(), 2)
+  // odd row indented by one space
+  assert_eq(lines[0].to_string(), "a b")
+  assert_eq(lines[1].to_string(), " c d")
+}
+
+///|
+test "hexmap: render fills unwritten cells with dot" {
+  let m : HexMap[String] = HexMap::make_empty(Region::rectangle(3, 1))
+  m.set(@hex.Hex::make(0, 0), "x")
+  let out = m.render(fn(v) { v })
+  assert_eq(out, "x . .")
+}
+
+///|
+test "hexmap: render parallelogram without stagger" {
+  let m : HexMap[String] = HexMap::make(Region::parallelogram(2, 2), "o")
+  let out = m.render(fn(v) { v })
+  let lines = out.split("\n").collect()
+  assert_eq(lines.count(), 2)
+  assert_eq(lines[0].to_string(), "o o")
+  assert_eq(lines[1].to_string(), "o o")
+}
+
+///|
+test "hexmap: render falls back to listing for hexagon" {
+  let m : HexMap[Int32] = HexMap::make_empty(Region::hexagon(1))
+  m.set(@hex.Hex::make(0, 0), 7)
+  let out = m.render(fn(v) { v.to_string() })
+  assert_eq(out, "0,0 7")
+}
