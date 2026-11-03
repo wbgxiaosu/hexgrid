@@ -1,0 +1,46 @@
+// Generated using `moon info`, DON'T EDIT IT
+package "wbgxiaosu/hexgrid/hexmap"
+
+import {
+  "moonbitlang/core/debug",
+  "wbgxiaosu/hexgrid/hex",
+}
+
+// Values
+pub let region_shapes : Array[Region]
+
+// Errors
+
+// Types and methods
+pub struct HexMap[T] {
+  // private fields
+}
+pub fn[T] HexMap::contains(Self[T], @hex.Hex) -> Bool
+pub fn[T] HexMap::get(Self[T], @hex.Hex) -> T?
+pub fn[T] HexMap::get_or(Self[T], @hex.Hex, T) -> T
+pub fn[T] HexMap::in_region(Self[T], @hex.Hex) -> Bool
+pub fn[T] HexMap::length(Self[T]) -> Int32
+pub fn[T] HexMap::make(Region, T) -> Self[T]
+pub fn[T] HexMap::make_empty(Region) -> Self[T]
+pub fn[T] HexMap::occupied(Self[T]) -> Array[@hex.Hex]
+pub fn[T] HexMap::region(Self[T]) -> Region
+pub fn[T] HexMap::remove(Self[T], @hex.Hex) -> T?
+pub fn[T] HexMap::set(Self[T], @hex.Hex, T) -> Unit
+pub fn[T] HexMap::values(Self[T]) -> Array[T]
+
+#derive(Eq, @debug.Debug)
+pub enum Region {
+  Parallelogram(Int32, Int32)
+  Rectangle(Int32, Int32)
+  Hexagon(Int32)
+  Triangle(Int32)
+}
+pub fn Region::cells(Self) -> Array[@hex.Hex]
+pub fn Region::equal(Self, Self) -> Bool
+pub fn Region::not_equal(Self, Self) -> Bool
+pub fn Region::size(Self) -> Int32
+pub fn Region::to_repr(Self) -> @debug.Repr
+
+// Type aliases
+
+// Traits
