@@ -19,10 +19,11 @@ pub let pointy_layout : Layout
 // Errors
 
 // Types and methods
+#derive(Eq, Hash, @debug.Debug)
 pub struct Hex {
   q : Int32
   r : Int32
-} derive(Eq, Hash, @debug.Debug)
+}
 pub fn Hex::cube_round((Double, Double, Double)) -> Self
 pub fn Hex::distance(Self, Self) -> Int32
 pub fn Hex::equal(Self, Self) -> Bool
@@ -47,11 +48,12 @@ pub fn Hex::s(Self) -> Int32
 pub fn Hex::spiral(Self, Int32, Int32) -> Array[Self]
 pub fn Hex::to_repr(Self) -> @debug.Repr
 
+#derive(Eq, @debug.Debug)
 pub struct Layout {
   orientation : Orientation
   size : (Double, Double)
   origin : (Double, Double)
-} derive(Eq, @debug.Debug)
+}
 pub fn Layout::axial_to_pixel(Self, Hex) -> (Double, Double)
 pub fn Layout::equal(Self, Self) -> Bool
 pub fn Layout::from_bounds(Orientation, Double, Double) -> Self
@@ -59,30 +61,33 @@ pub fn Layout::not_equal(Self, Self) -> Bool
 pub fn Layout::pixel_to_axial(Self, Double, Double) -> (Double, Double)
 pub fn Layout::to_repr(Self) -> @debug.Repr
 
+#derive(Eq, @debug.Debug)
 pub struct OffsetCoord {
   col : Int32
   row : Int32
-} derive(Eq, @debug.Debug)
+}
 pub fn OffsetCoord::equal(Self, Self) -> Bool
 pub fn OffsetCoord::from_axial(Hex, OffsetLayout) -> Self
 pub fn OffsetCoord::not_equal(Self, Self) -> Bool
 pub fn OffsetCoord::to_axial(Self, OffsetLayout) -> Hex
 pub fn OffsetCoord::to_repr(Self) -> @debug.Repr
 
+#derive(Eq, @debug.Debug)
 pub enum OffsetLayout {
   OddR
   EvenR
   OddQ
   EvenQ
-} derive(Eq, @debug.Debug)
+}
 pub fn OffsetLayout::equal(Self, Self) -> Bool
 pub fn OffsetLayout::not_equal(Self, Self) -> Bool
 pub fn OffsetLayout::to_repr(Self) -> @debug.Repr
 
+#derive(Eq, @debug.Debug)
 pub enum Orientation {
   Pointy
   Flat
-} derive(Eq, @debug.Debug)
+}
 pub fn Orientation::equal(Self, Self) -> Bool
 pub fn Orientation::not_equal(Self, Self) -> Bool
 pub fn Orientation::to_repr(Self) -> @debug.Repr

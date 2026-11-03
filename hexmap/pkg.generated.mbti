@@ -37,9 +37,13 @@ pub enum Region {
 }
 pub fn Region::cells(Self) -> Array[@hex.Hex]
 pub fn Region::equal(Self, Self) -> Bool
+pub fn Region::hexagon(Int32) -> Self
 pub fn Region::not_equal(Self, Self) -> Bool
+pub fn Region::parallelogram(Int32, Int32) -> Self
+pub fn Region::rectangle(Int32, Int32) -> Self
 pub fn Region::size(Self) -> Int32
 pub fn Region::to_repr(Self) -> @debug.Repr
+pub fn Region::triangle(Int32) -> Self
 
 // Type aliases
 

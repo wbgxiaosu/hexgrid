@@ -2,6 +2,7 @@ import {
   "wbgxiaosu/hexgrid/hex",
   "wbgxiaosu/hexgrid/path",
   "wbgxiaosu/hexgrid/fov",
+  "wbgxiaosu/hexgrid/hexmap",
 }
 
 pkgtype(kind: "executable")

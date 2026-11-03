@@ -82,3 +82,25 @@ pub fn Region::size(self : Region) -> Int32 {
     Triangle(n) => n * (n + 1) / 2
   }
 }
+
+///|
+/// Public constructor helpers: the enum is read-only outside this
+/// package, so consumers build regions through these functions.
+pub fn Region::parallelogram(w : Int32, h : Int32) -> Region {
+  Parallelogram(w, h)
+}
+
+///|
+pub fn Region::rectangle(w : Int32, h : Int32) -> Region {
+  Rectangle(w, h)
+}
+
+///|
+pub fn Region::hexagon(n : Int32) -> Region {
+  Hexagon(n)
+}
+
+///|
+pub fn Region::triangle(n : Int32) -> Region {
+  Triangle(n)
+}
