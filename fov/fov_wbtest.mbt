@@ -69,3 +69,55 @@ test "fov: every visible non-viewer cell has a clear line of sight" {
     assert_true(seen.contains(c))
   }
 }
+
+///|
+test "fov: symmetric visibility is symmetric for all pairs" {
+  let cells = @hex.Hex::range(h(0, 0), 3)
+  // wall at (1, 0) plus a second wall further out for variety
+  fn terrain(c : @hex.Hex) -> Bool {
+    !((c.q == 1 && c.r == 0) || (c.q == -1 && c.r == -1))
+  }
+  for a in cells {
+    for b in cells {
+      let forward = visible(a, b, terrain) && visible(b, a, terrain)
+      let backward = visible(b, a, terrain) && visible(a, b, terrain)
+      assert_eq(forward, backward)
+    }
+  }
+}
+
+///|
+test "fov: compute_symmetric is a subset of compute" {
+  fn wall_east(c : @hex.Hex) -> Bool {
+    !(c.q == 1 && c.r == 0)
+  }
+  let one_way = compute(h(0, 0), 4, wall_east)
+  let symmetric = compute_symmetric(h(0, 0), 4, wall_east)
+  for c in symmetric {
+    assert_true(one_way.contains(c))
+  }
+  assert_true(symmetric.length() <= one_way.length())
+}
+
+///|
+test "fov: symmetric hides cells whose occupants cannot see back" {
+  fn wall_east(c : @hex.Hex) -> Bool {
+    !(c.q == 1 && c.r == 0)
+  }
+  // (2, 0) is behind the wall from the viewer at origin...
+  assert_true(!compute(h(0, 0), 4, wall_east).contains(h(2, 0)))
+  // ...and conversely an occupant at (2, 0) cannot see the origin,
+  // so the symmetric model must not reveal it either.
+  assert_true(!compute_symmetric(h(0, 0), 4, wall_east).contains(h(2, 0)))
+  // the wall itself is still visible from the origin...
+  assert_true(compute_symmetric(h(0, 0), 4, wall_east).contains(h(1, 0)))
+  // ...but a wall occupant cannot see past itself to the origin? It can:
+  // the line from (1,0) to (0,0) has no interior cells, so the wall
+  // occupant does see the viewer. Both models agree here.
+  assert_true(visible(h(1, 0), h(0, 0), wall_east))
+  // open field: symmetric equals one-way
+  assert_eq(
+    compute_symmetric(h(0, 0), 3, all_clear).length(),
+    compute(h(0, 0), 3, all_clear).length(),
+  )
+}
