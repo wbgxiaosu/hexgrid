@@ -38,6 +38,28 @@ and licence.
   back-pointer path reconstruction. The binary heap is written from
   scratch in MoonBit.
 
+- **Symmetric field of view** — the symmetric-visibility discipline:
+  a cell is visible only when the line of sight is clear in both
+  directions. This adapts Björn Bergström's symmetric shadowcasting
+  principles (RogueBasin, *"Better FOV / symmetric shadowcasting"*,
+  <https://www.roguebasin.com/index.php/Better_FOV> — freely readable)
+  to hexgrid's own hex line drawing; the composition and all code are
+  original.
+
+- **Multi-source Dijkstra** — the classical multi-source variant of
+  Dijkstra's shortest-path algorithm (initialize the priority queue
+  with every source at cost zero), standard textbook material (e.g.
+  Cormen et al., *Introduction to Algorithms*; Edsger W. Dijkstra,
+  *"A note on two problems in connexion with graphs"*, Numerische
+  Mathematik 1, 1959). Only the algorithmic idea is referenced; the
+  implementation over hex adjacency is hexgrid's own.
+
+- **Region-shaped maps** — parallelogram, rectangle (odd-r offset
+  space), hexagon and triangle enumeration follows the "map shapes"
+  treatments in Red Blob Games, *"Hexagonal Grids"* (same source and
+  scope as the coordinate systems above). Triangle cells use the
+  convention `q >= 1`, `r >= 1`, `q + r <= n + 1`.
+
 ## Dependency licences
 
 hexgrid currently has **zero third-party package dependencies** — only

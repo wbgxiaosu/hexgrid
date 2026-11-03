@@ -4,6 +4,32 @@ All notable changes to this project are documented in this file.
 The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/)
 and the project adheres to [Semantic Versioning](https://semver.org/).
 
+## [0.2.0] - 2026-11-03
+
+### Added
+
+- `hexmap` package: region-shaped map storage — `Region` shapes
+  (parallelogram, odd-r rectangle, filled hexagon, triangle) with
+  closed-form cell counts and deterministic cell enumeration, and a
+  generic sparse `HexMap[T]` (`make`, `make_empty`, `get`, `get_or`,
+  `set`, `remove`, `contains`, `in_region`, `occupied`, `values`).
+- `fov::visible` and `fov::compute_symmetric`: symmetric
+  line-of-sight FOV — a cell is visible only when the line of sight is
+  clear in both directions (always a subset of `compute`).
+- `Reachability::compute_multi`: multi-source Dijkstra flood; each
+  reached cell records the cheapest cost over all sources with
+  back-pointers towards the nearest source. The single-source
+  `compute` now delegates to it (`Reachability.sources` replaces the
+  former `source` field).
+- Independent consumer example exercises the three new APIs.
+
+### Documentation
+
+- README feature table and roadmap updated; provenance for the
+  symmetric FOV, multi-source Dijkstra and region-shaped maps added to
+  `docs/RULES_REFERENCES.md`; acceptance evidence map added in
+  `ACCEPTANCE.md`.
+
 ## [0.1.2] - 2026-11-03
 
 ### Changed

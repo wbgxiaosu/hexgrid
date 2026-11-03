@@ -13,8 +13,9 @@ dependency-free APIs.
 | Coordinate systems | axial `Hex`, cube coordinates, `OddR`/`EvenR`/`OddQ`/`EvenQ` offset layouts, round-trip conversion |
 | Grid mathematics | hex distance, 6-direction neighbours, straight lines (lerp + cube rounding), rings, spirals, filled ranges, 60° rotation, reflection |
 | Pixel layouts | pointy-top and flat-top layouts, pixel ↔ axial conversion, bounds-driven sizing |
-| Pathfinding | Dijkstra cost flood with custom step costs and `max_cost` bounds, A* with admissible heuristics, path reconstruction |
-| Field of view | line-of-sight FOV with transparency callbacks, wall-blocking semantics |
+| Pathfinding | Dijkstra cost flood — single- or multi-source — with custom step costs and `max_cost` bounds, A* with admissible heuristics, path reconstruction towards the nearest source |
+| Field of view | line-of-sight FOV with transparency callbacks, wall-blocking semantics, plus a symmetric variant (bidirectional visibility) |
+| Map storage | region-shaped `HexMap[T]` containers: parallelogram, odd-r rectangle, filled hexagon and triangle shapes with closed-form cell counts |
 
 ## Shared design principles
 
@@ -140,11 +141,12 @@ topology, offset-layout conversions and FOV live only here.
 
 ## Roadmap
 
-- hex-map storage container with rectangle/hexagon/parallelogram
-  region shapes;
-- symmetric shadowcasting FOV as an alternative to the line-based
-  model;
-- Dijkstra maps with multiple sources and falloff functions.
+- per-cell terrain layers on `HexMap` with falloff functions over
+  multi-source Dijkstra maps;
+- hex-rectangle iteration helpers and map transforms (rotation,
+  reflection of whole maps);
+- optional boolean-set operations on regions (union, intersection,
+  subtraction).
 
 ## Acceptance
 
