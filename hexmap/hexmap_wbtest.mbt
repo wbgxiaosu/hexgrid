@@ -121,10 +121,10 @@ test "hexmap: render rectangle rows with odd-r stagger" {
   m.set(@hex.Hex::make(1, 1), "d")
   let out = m.render(fn(v) { v })
   let lines = out.split("\n").collect()
-  assert_eq(lines.count(), 2)
+  assert_eq(lines.length(), 2)
   // odd row indented by one space
-  assert_eq(lines[0].to_string(), "a b")
-  assert_eq(lines[1].to_string(), " c d")
+  assert_eq(lines[0].to_owned(), "a b")
+  assert_eq(lines[1].to_owned(), " c d")
 }
 
 ///|
@@ -140,9 +140,9 @@ test "hexmap: render parallelogram without stagger" {
   let m : HexMap[String] = HexMap::make(Region::parallelogram(2, 2), "o")
   let out = m.render(fn(v) { v })
   let lines = out.split("\n").collect()
-  assert_eq(lines.count(), 2)
-  assert_eq(lines[0].to_string(), "o o")
-  assert_eq(lines[1].to_string(), "o o")
+  assert_eq(lines.length(), 2)
+  assert_eq(lines[0].to_owned(), "o o")
+  assert_eq(lines[1].to_owned(), "o o")
 }
 
 ///|

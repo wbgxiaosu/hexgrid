@@ -25,6 +25,7 @@ pub fn[T] HexMap::make_empty(Region) -> Self[T]
 pub fn[T] HexMap::occupied(Self[T]) -> Array[@hex.Hex]
 pub fn[T] HexMap::region(Self[T]) -> Region
 pub fn[T] HexMap::remove(Self[T], @hex.Hex) -> T?
+pub fn[T] HexMap::render(Self[T], (T) -> String) -> String
 pub fn[T] HexMap::set(Self[T], @hex.Hex, T) -> Unit
 pub fn[T] HexMap::values(Self[T]) -> Array[T]
 

@@ -129,7 +129,7 @@ pub fn[T] HexMap::render(self : HexMap[T], render : (T) -> String) -> String {
       let rows : Array[String] = []
       for row in 0..<h {
         let line = StringBuilder()
-        if row & (1 == 1) {
+        if (row & 1) == 1 {
           line.write_string(" ")
         }
         for col in 0..<w {
@@ -147,7 +147,14 @@ pub fn[T] HexMap::render(self : HexMap[T], render : (T) -> String) -> String {
         }
         rows.push(line.to_string())
       }
-      String::concat_with(rows, "\n")
+      let out = StringBuilder()
+      for i, r in rows {
+        if i > 0 {
+          out.write_string("\n")
+        }
+        out.write_string(r)
+      }
+      out.to_string()
     }
     Parallelogram(w, h) => {
       let rows : Array[String] = []
@@ -167,7 +174,14 @@ pub fn[T] HexMap::render(self : HexMap[T], render : (T) -> String) -> String {
         }
         rows.push(line.to_string())
       }
-      String::concat_with(rows, "\n")
+      let out = StringBuilder()
+      for i, r in rows {
+        if i > 0 {
+          out.write_string("\n")
+        }
+        out.write_string(r)
+      }
+      out.to_string()
     }
     _ => {
       // generic fallback: deterministic occupied-cell listing
@@ -178,7 +192,14 @@ pub fn[T] HexMap::render(self : HexMap[T], render : (T) -> String) -> String {
           None => ()
         }
       }
-      String::concat_with(lines, "\n")
+      let out = StringBuilder()
+      for i, l in lines {
+        if i > 0 {
+          out.write_string("\n")
+        }
+        out.write_string(l)
+      }
+      out.to_string()
     }
   }
 }
