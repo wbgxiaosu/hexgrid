@@ -164,3 +164,28 @@ test "lerp: endpoints are exact" {
   assert_eq(q1, 4.0)
   assert_eq(r1, -2.0)
 }
+
+///|
+test "neighbors: exactly six distinct distance-1 cells" {
+  for cell in Hex::range(h(0, 0), 3) {
+    let ns = cell.neighbors()
+    assert_eq(ns.length(), 6)
+    for n in ns {
+      assert_eq(cell.distance(n), 1)
+    }
+    // all distinct
+    for i in 0..<6 {
+      for j in (i + 1)..<6 {
+        assert_false(ns[i] == ns[j])
+      }
+    }
+  }
+}
+
+///|
+test "neighbors: matches direction order" {
+  let c = h(3, -1)
+  for i in 0..<6 {
+    assert_eq(c.neighbors()[i], c.neighbor(i))
+  }
+}

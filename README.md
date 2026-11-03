@@ -119,6 +119,25 @@ copied. The exact sources and scopes are recorded in
 [docs/RULES_REFERENCES.md](docs/RULES_REFERENCES.md). hexgrid is
 unrelated to Uber's H3 geodesic hexagonal indexing.
 
+## Ecosystem positioning
+
+A survey of mooncakes.io (November 2026) shows hexgrid occupies an
+unoccupied niche: **flat hexagonal-grid geometry**. Adjacent libraries
+do not overlap:
+
+- Square-grid / general-graph pathfinding toolkits (e.g. `moonpath`,
+  `moonnavkit`, `moonbit-pathfinding`) operate on 2D grids or abstract
+  graphs; none provide axial/cube coordinates, ring/spiral generation,
+  hex rotations or hex-specific line-of-sight.
+- Procedural content generators (e.g. `terrain`) produce maps but
+  define no grid topology.
+- Tiled-map codecs (e.g. `moonbit-pixelkit`) parse map files without
+  hex geometry math.
+
+hexgrid composes naturally with such libraries: its `Hex` values can
+feed any pathfinding or map-representation layer, while the six-way
+topology, offset-layout conversions and FOV live only here.
+
 ## Roadmap
 
 - hex-map storage container with rectangle/hexagon/parallelogram

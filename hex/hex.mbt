@@ -79,6 +79,17 @@ pub fn Hex::neighbor(self : Hex, direction : Int32) -> Hex {
 }
 
 ///|
+/// All six neighbours of `self`, in the same order as `directions`
+/// (counter-clockwise starting from east).
+pub fn Hex::neighbors(self : Hex) -> Array[Hex] {
+  let out = []
+  for i in 0..<6 {
+    out.push(self.neighbor(i))
+  }
+  out
+}
+
+///|
 /// Manhattan-style hex distance: the minimum number of steps between
 /// two cells on the grid.
 pub fn Hex::distance(self : Hex, other : Hex) -> Int32 {
