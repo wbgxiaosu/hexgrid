@@ -16,7 +16,7 @@ fn unit_cost(_from : @hex.Hex, _to : @hex.Hex) -> Double {
 ///|
 test "dijkstra: uniform cost field equals hex distance" {
   let r = Reachability::compute(h(0, 0), 5.0, all_pass, unit_cost)
-  assert_eq(r.source, h(0, 0))
+  assert_eq(r.sources, [h(0, 0)])
   // every cell within max_cost is reachable at exactly the hex distance
   for cell in @hex.Hex::range(h(0, 0), 5) {
     assert_eq(r.cost_to(cell), Some(cell.distance(h(0, 0)).to_double()))
@@ -126,4 +126,74 @@ test "astar agrees with dijkstra on path cost across the field" {
       None => fail("open field")
     }
   }
+}
+
+///|
+test "dijkstra: multi-source agrees with single-source floods" {
+  let field = @hex.Hex::range(h(0, 0), 3)
+  fn passable(_c : @hex.Hex) -> Bool {
+    true
+  }
+  fn cost(_a : @hex.Hex, _b : @hex.Hex) -> Double {
+    1.0
+  }
+  // each single-source flood equals the multi-source flood with one source
+  for s in [h(-2, 1), h(0, 0), h(2, -2)] {
+    let single = Reachability::compute(s, 10.0, passable, cost)
+    let multi = Reachability::compute_multi([s], 10.0, passable, cost)
+    for c in field {
+      assert_eq(single.cost_to(c), multi.cost_to(c))
+    }
+  }
+}
+
+///|
+test "dijkstra: multi-source cost is the min over sources" {
+  fn passable(_c : @hex.Hex) -> Bool {
+    true
+  }
+  fn cost(_a : @hex.Hex, _b : @hex.Hex) -> Double {
+    1.0
+  }
+  let a = h(-3, 0)
+  let b = h(3, -3)
+  let multi = Reachability::compute_multi([a, b], 10.0, passable, cost)
+  let from_a = Reachability::compute(a, 10.0, passable, cost)
+  let from_b = Reachability::compute(b, 10.0, passable, cost)
+  for c in @hex.Hex::range(h(0, 0), 4) {
+    let lo = match (from_a.cost_to(c), from_b.cost_to(c)) {
+      (Some(x), Some(y)) => if x < y { x } else { y }
+      (Some(x), None) => x
+      (None, Some(y)) => y
+      (None, None) => continue
+    }
+    assert_eq(multi.cost_to(c), Some(lo))
+  }
+  // the origin is 3 steps from either source here
+  assert_eq(multi.cost_to(h(0, 0)), Some(3.0))
+  // a path home terminates at some source
+  let p = multi.path_to(h(0, 0)).unwrap()
+  assert_true(p[0] == a || p[0] == b)
+}
+
+///|
+test "dijkstra: multi-source seeds survive impassable terrain" {
+  fn all_walls(_c : @hex.Hex) -> Bool {
+    false
+  }
+  fn cost(_a : @hex.Hex, _b : @hex.Hex) -> Double {
+    1.0
+  }
+  let multi = Reachability::compute_multi(
+    [h(-1, 0), h(1, 0)],
+    5.0,
+    all_walls,
+    cost,
+  )
+  // sources are exempt from the passable check, so both exist at cost 0
+  assert_eq(multi.cost_to(h(-1, 0)), Some(0.0))
+  assert_eq(multi.cost_to(h(1, 0)), Some(0.0))
+  // any other cell requires entering an impassable cell -> unreachable
+  assert_eq(multi.cost_to(h(0, 0)), None)
+  assert_eq(multi.cost_to(h(2, 0)), None)
 }

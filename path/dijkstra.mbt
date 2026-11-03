@@ -77,10 +77,11 @@ pub struct Reachability {
   /// cost 0). Cells not reachable within `max_cost` are absent.
   cost : Map[@hex.Hex, Double]
   /// Back-pointers: `came_from[cell]` is the previous cell on a
-  /// cheapest path from the source.
+  /// cheapest path from the nearest source.
   came_from : Map[@hex.Hex, @hex.Hex]
-  /// The source cell.
-  source : @hex.Hex
+  /// The source cells the flood started from (exactly one for a
+  /// single-source flood).
+  sources : Array[@hex.Hex]
 }
 
 ///|
@@ -102,7 +103,7 @@ pub fn Reachability::path_to(
   }
   let acc : Array[@hex.Hex] = [target]
   let mut cur = target
-  while !(cur == self.source) {
+  while !self.sources.contains(cur) {
     match self.came_from.get(cur) {
       Some(prev) => {
         acc.push(prev)
@@ -122,7 +123,7 @@ pub fn Reachability::path_to(
 }
 
 ///|
-/// Dijkstra flood over the hex grid from `source`.
+/// Dijkstra flood over the hex grid from a single `source`.
 ///
 /// - `passable(cell)` decides whether a cell may be entered at all
 ///   (the source is exempt from this check).
@@ -137,18 +138,38 @@ pub fn Reachability::compute(
   passable : (@hex.Hex) -> Bool,
   step_cost : (@hex.Hex, @hex.Hex) -> Double,
 ) -> Reachability raise {
+  Reachability::compute_multi([source], max_cost, passable, step_cost)
+}
+
+///|
+/// Dijkstra flood over the hex grid from **several** sources at once.
+///
+/// Every source starts at cost 0.0; each reached cell records the
+/// cheapest cost over all sources and a back-pointer path towards the
+/// nearest source (the first one a cheapest path reaches). Sources are
+/// exempt from the `passable` check, exactly like the single-source
+/// `compute`. Typical uses: distance-to-nearest-city maps, threat
+/// radii of several units, or multi-exit escape analysis.
+pub fn Reachability::compute_multi(
+  sources : Array[@hex.Hex],
+  max_cost : Double,
+  passable : (@hex.Hex) -> Bool,
+  step_cost : (@hex.Hex, @hex.Hex) -> Double,
+) -> Reachability raise {
   let cost : Map[@hex.Hex, Double] = Map([])
   let came_from : Map[@hex.Hex, @hex.Hex] = Map([])
   let frontier : Heap[@hex.Hex] = Heap::new()
-  cost[source] = 0.0
-  frontier.push(0.0, source)
+  for source in sources {
+    cost[source] = 0.0
+    frontier.push(0.0, source)
+  }
   while frontier.size() > 0 {
     match frontier.pop() {
       Some(current) => {
         let cur_cost = cost.get(current).unwrap_or(0.0)
         for d in 0..<6 {
           let next = current.neighbor(d)
-          if !(next == source) && !passable(next) {
+          if !sources.contains(next) && !passable(next) {
             continue
           }
           let w = step_cost(current, next)
@@ -176,11 +197,11 @@ pub fn Reachability::compute(
       None => break
     }
   }
-  { cost, came_from, source, }
+  { cost, came_from, sources, }
 }
 
 ///|
-/// The cheapest cost from the source to `cell`, or `None` if the cell
+/// The cheapest cost from the nearest source to `cell`, or `None` if the cell
 /// was not reached within `max_cost`.
 pub fn Reachability::cost_to(self : Reachability, cell : @hex.Hex) -> Double? {
   self.cost.get(cell)
