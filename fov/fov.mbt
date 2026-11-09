@@ -1,9 +1,33 @@
+/// # Visibility semantics (formal definition)
+///
+/// Let `line(a, b)` be the straight grid line of `@hex.Hex::line`
+/// (cube interpolation with rounding), inclusive of both endpoints,
+/// and `interior(line(a, b))` be that line without its endpoints.
+///
+/// **One-way visibility** `visible(viewer, target)` holds if and only
+/// if every cell of `interior(line(viewer, target))` satisfies
+/// `transparent`. Consequences of this definition:
+///
+/// - the viewer's own transparency never matters (it is not interior);
+/// - an opaque **target is still visible** — walls can be seen even
+///   though they block everything behind them;
+/// - a cell adjacent to the viewer has an empty interior, so it is
+///   always visible regardless of the callbacks;
+/// - only cells within grid distance `radius` are enumerated, and the
+///   viewer itself is always part of the result.
+///
+/// **Symmetric visibility** additionally requires the mirror check:
+/// `visible(viewer, target)` **and** `visible(target, viewer)`. This
+/// is the hexagonal adaptation of the symmetric-visibility discipline
+/// of Bjorn Bergstrom's symmetric shadowcasting (RogueBasin, "Better
+/// FOV", https://www.roguebasin.com/index.php/Better_FOV — freely
+/// readable); the composition with hex line drawing and the
+/// implementation are original. Symmetric results are always a subset
+/// of the one-way results on the same inputs.
+
 ///|
 /// Whether `target` is visible from `viewer` under the one-way
-/// line-of-sight rule: the straight grid line from the viewer to the
-/// target (see `@hex.Hex::line`) passes only through transparent
-/// cells. Both endpoints are exempt from the transparency check, so
-/// walls are visible even though they block the light behind them.
+/// line-of-sight rule defined in the package header.
 pub fn visible(
   viewer : @hex.Hex,
   target : @hex.Hex,
