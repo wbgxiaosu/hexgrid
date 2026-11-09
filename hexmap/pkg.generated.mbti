@@ -12,6 +12,25 @@ pub let region_shapes : Array[Region]
 // Errors
 
 // Types and methods
+#derive(@debug.Debug)
+pub struct DenseHexMap[T] {
+  region : Region
+  cells : Array[@hex.Hex]
+  index : Map[@hex.Hex, Int32]
+  data : Array[T]
+  default : T
+}
+pub fn[T] DenseHexMap::cell_at(Self[T], Int32) -> @hex.Hex?
+pub fn[T] DenseHexMap::contains(Self[T], @hex.Hex) -> Bool
+pub fn[T] DenseHexMap::get(Self[T], @hex.Hex) -> T?
+pub fn[T] DenseHexMap::get_or(Self[T], @hex.Hex) -> T
+pub fn[T] DenseHexMap::index_of(Self[T], @hex.Hex) -> Int32?
+pub fn[T] DenseHexMap::iter(Self[T], (@hex.Hex, T) -> Unit) -> Unit
+pub fn[T] DenseHexMap::length(Self[T]) -> Int32
+pub fn[T] DenseHexMap::make(Region, T) -> Self[T]
+pub fn[T] DenseHexMap::set(Self[T], @hex.Hex, T) -> Unit raise
+pub fn[T : @debug.Debug] DenseHexMap::to_repr(Self[T]) -> @debug.Repr
+
 pub struct HexMap[T] {
   // private fields
 }

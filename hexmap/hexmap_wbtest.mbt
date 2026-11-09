@@ -152,3 +152,62 @@ test "hexmap: render falls back to listing for hexagon" {
   let out = m.render(fn(v) { v.to_string() })
   assert_eq(out, "0,0 7")
 }
+
+///|
+test "dense: index mapping roundtrips for every cell" {
+  let m : DenseHexMap[String] = DenseHexMap::make(Region::hexagon(2), "x")
+  for i, c in m.cells {
+    assert_eq(m.index_of(c), Some(i))
+    assert_eq(m.cell_at(i), Some(c))
+  }
+  // outside the region: no slot
+  assert_eq(m.index_of(@hex.Hex::make(99, 99)), None)
+  assert_eq(m.cell_at(m.length()), None)
+}
+
+///|
+test "dense: get/set behave like the sparse map" {
+  let region = Region::rectangle(3, 3)
+  let dense : DenseHexMap[Int32] = DenseHexMap::make(region, 0)
+  let sparse : HexMap[Int32] = HexMap::make(region, 0)
+  for i, c in dense.cells {
+    let v = (i * i + 7) % 13
+    dense.set(c, v)
+    sparse.set(c, v)
+  }
+  for c in region.cells() {
+    assert_eq(dense.get(c), sparse.get(c))
+    assert_eq(dense.get_or(c), sparse.get_or(c, 0))
+  }
+  assert_eq(dense.length(), sparse.length())
+}
+
+///|
+test "dense: default fill and out-of-region semantics" {
+  let m : DenseHexMap[Int32] = DenseHexMap::make(Region::hexagon(1), 42)
+  assert_eq(m.length(), 7)
+  for c in m.cells {
+    assert_eq(m.get_or(c), 42)
+  }
+  // outside the region: get is None, get_or falls back, set raises
+  let out = @hex.Hex::make(10, 10)
+  assert_eq(m.get(out), None)
+  assert_eq(m.get_or(out), 42)
+  let outcome : Unit? = Some(m.set(out, 1)) catch { _ => None }
+  assert_eq(outcome, None)
+}
+
+///|
+test "dense: iter visits every slot in region order" {
+  let m : DenseHexMap[Int32] = DenseHexMap::make(Region::hexagon(1), 5)
+  m.set(@hex.Hex::make(0, 0), 99)
+  let seen : Array[@hex.Hex] = []
+  let vals : Array[Int32] = []
+  m.iter(fn(c, v) {
+    seen.push(c)
+    vals.push(v)
+  })
+  assert_eq(seen, m.cells)
+  assert_eq(vals.length(), 7)
+  assert_eq(vals[3], 99)
+}
