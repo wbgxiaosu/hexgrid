@@ -14,8 +14,9 @@ dependency-free APIs.
 | Grid mathematics | hex distance, 6-direction neighbours, straight lines (lerp + cube rounding), rings, spirals, filled ranges, 60° rotation, reflection |
 | Pixel layouts | pointy-top and flat-top layouts, pixel ↔ axial conversion, bounds-driven sizing |
 | Pathfinding | Dijkstra cost flood — single- or multi-source — with custom step costs and `max_cost` bounds, A* with admissible heuristics, path reconstruction towards the nearest source |
-| Field of view | line-of-sight FOV with transparency callbacks, wall-blocking semantics, plus a symmetric variant (bidirectional visibility) |
-| Map storage | region-shaped `HexMap[T]` containers: parallelogram, odd-r rectangle, filled hexagon and triangle shapes with closed-form cell counts |
+| Field of view | line-of-sight FOV with a **formally defined visibility semantics** (interior-transparency rule, endpoint exemptions), wall-blocking, and a symmetric variant (bidirectional visibility, Bergstrom-style discipline) |
+| Map storage | sparse `HexMap[T]` and **dense `DenseHexMap[T]`** (array-backed, bidirectional cell-to-index mapping) over parallelogram / odd-r rectangle / filled hexagon / triangle regions with closed-form cell counts |
+| Bounds & metrics | `HexBounds` containment and enumeration, euclidean centre-to-centre distance, deterministic main direction, doubled (double-width/double-height) coordinate conversions |
 
 ## Shared design principles
 
@@ -143,10 +144,9 @@ topology, offset-layout conversions and FOV live only here.
 
 - per-cell terrain layers on `HexMap` with falloff functions over
   multi-source Dijkstra maps;
-- hex-rectangle iteration helpers and map transforms (rotation,
-  reflection of whole maps);
-- optional boolean-set operations on regions (union, intersection,
-  subtraction).
+- hex-rectangle iteration helpers, whole-map transforms, and
+  boolean-set operations on regions (union, intersection, subtraction);
+- field-of-movement highlighting and wraparound (toroidal) bounds.
 
 ## Acceptance
 

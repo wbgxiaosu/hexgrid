@@ -60,6 +60,20 @@ and licence.
   scope as the coordinate systems above). Triangle cells use the
   convention `q >= 1`, `r >= 1`, `q + r <= n + 1`.
 
+- **Doubled coordinates** — double-width (`col = 2q + r`, `row = r`)
+  and double-height (`col = q`, `row = q + 2r`) conversions follow Red
+  Blob Games, *"Hexagonal Grids"* (doubled coordinates section), same
+  reference as the coordinate systems above; parity validation is
+  hexgrid's own addition.
+
+- **Scope benchmark** — the functional breadth of this library is
+  benchmarked against the mature rust crate [`hexx`](https://docs.rs/hexx)
+  (dual MIT/Apache-2.0): hexgrid's doubled coordinates, bounds,
+  dense storage, pathfinding and FOV correspond in scope to hexx's
+  conversions, bounds, storage and algorithms modules. Only the
+  feature map was used as a checklist; **no code was read, copied or
+  ported** — all implementations are original MoonBit.
+
 ## Dependency licences
 
 hexgrid currently has **zero third-party package dependencies** — only

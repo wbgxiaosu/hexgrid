@@ -4,6 +4,26 @@ All notable changes to this project are documented in this file.
 The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/)
 and the project adheres to [Semantic Versioning](https://semver.org/).
 
+## [0.3.0] - 2026-11-09
+
+### Added
+
+- `hex` package: doubled-coordinate conversions (`Doubled`, double-
+  width and double-height modes with parity validation),
+  `Hex::euclidean_distance`, `Hex::main_direction_to`, and
+  `HexBounds` (containment, closed-form cell count, spiral
+  enumeration). Functional scope benchmarked against the rust
+  `hexx` crate (feature map only, no code reused).
+- `hexmap` package: `DenseHexMap[T]` — dense array-backed region
+  storage with a bidirectional cell-to-index mapping (`index_of`,
+  `cell_at`), O(1) indexed access and ordered iteration.
+- `fov` package: formal package-level visibility semantics (one-way
+  interior-transparency rule with endpoint exemptions; symmetric
+  bidirectional rule) and a boundary test suite: radius 0/1 and
+  open-field counts, opaque-world adjacency, wall/edge blocking,
+  interior-vs-target transparency, and 20 deterministic random wall
+  maps with pairwise-symmetry, subset and mirror-rule properties.
+
 ## [0.2.0] - 2026-11-03
 
 ### Added
