@@ -8,6 +8,8 @@ import {
 // Values
 pub let directions : Array[Hex]
 
+pub let doubled_modes : Array[DoubledMode]
+
 pub let flat_layout : Layout
 
 pub let offset_layouts : Array[OffsetLayout]
@@ -19,6 +21,26 @@ pub let pointy_layout : Layout
 // Errors
 
 // Types and methods
+#derive(Eq, @debug.Debug)
+pub struct Doubled {
+  col : Int32
+  row : Int32
+}
+pub fn Doubled::equal(Self, Self) -> Bool
+pub fn Doubled::make(Int32, Int32) -> Self
+pub fn Doubled::not_equal(Self, Self) -> Bool
+pub fn Doubled::to_hex(Self, DoubledMode) -> Hex raise
+pub fn Doubled::to_repr(Self) -> @debug.Repr
+
+#derive(Eq, @debug.Debug)
+pub enum DoubledMode {
+  DoubleWidth
+  DoubleHeight
+}
+pub fn DoubledMode::equal(Self, Self) -> Bool
+pub fn DoubledMode::not_equal(Self, Self) -> Bool
+pub fn DoubledMode::to_repr(Self) -> @debug.Repr
+
 #derive(Eq, Hash, @debug.Debug)
 pub struct Hex {
   q : Int32
@@ -27,12 +49,14 @@ pub struct Hex {
 pub fn Hex::cube_round((Double, Double, Double)) -> Self
 pub fn Hex::distance(Self, Self) -> Int32
 pub fn Hex::equal(Self, Self) -> Bool
+pub fn Hex::euclidean_distance(Self, Self) -> Double
 pub fn Hex::from_pixel_round(Double, Double, Layout) -> Self
 pub fn Hex::hash(Self) -> Int32
 pub fn Hex::hash_combine(Self, Hasher) -> Unit
 pub fn Hex::label(Self) -> String
 pub fn Hex::lerp(Self, Self, Double) -> (Double, Double, Double)
 pub fn Hex::line(Self, Self) -> Array[Self]
+pub fn Hex::main_direction_to(Self, Self) -> Int32
 pub fn Hex::make(Int32, Int32) -> Self
 pub fn Hex::neighbor(Self, Int32) -> Self
 pub fn Hex::neighbors(Self) -> Array[Self]
@@ -46,7 +70,21 @@ pub fn Hex::ring(Self, Int32) -> Array[Self]
 pub fn Hex::rotate(Self, Int32) -> Self
 pub fn Hex::s(Self) -> Int32
 pub fn Hex::spiral(Self, Int32, Int32) -> Array[Self]
+pub fn Hex::to_doubled(Self, DoubledMode) -> Doubled
 pub fn Hex::to_repr(Self) -> @debug.Repr
+
+#derive(Eq, @debug.Debug)
+pub struct HexBounds {
+  center : Hex
+  radius : Int32
+}
+pub fn HexBounds::all_cells(Self) -> Array[Hex]
+pub fn HexBounds::equal(Self, Self) -> Bool
+pub fn HexBounds::is_in_bounds(Self, Hex) -> Bool
+pub fn HexBounds::length(Self) -> Int32
+pub fn HexBounds::make(Hex, Int32) -> Self
+pub fn HexBounds::not_equal(Self, Self) -> Bool
+pub fn HexBounds::to_repr(Self) -> @debug.Repr
 
 #derive(Eq, @debug.Debug)
 pub struct Layout {

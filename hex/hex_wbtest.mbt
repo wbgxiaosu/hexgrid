@@ -189,3 +189,100 @@ test "neighbors: matches direction order" {
     assert_eq(c.neighbors()[i], c.neighbor(i))
   }
 }
+
+///|
+test "doubled: roundtrip is exact for every mode" {
+  for mode in doubled_modes {
+    for cell in Hex::range(h(0, 0), 4) {
+      assert_eq(cell.to_doubled(mode).to_hex(mode), cell)
+    }
+  }
+}
+
+///|
+test "doubled: known conversions match Red Blob formulas" {
+  // double width: col = 2q + r, row = r
+  assert_eq(h(1, 0).to_doubled(DoubleWidth), Doubled::make(2, 0))
+  assert_eq(h(0, 1).to_doubled(DoubleWidth), Doubled::make(1, 1))
+  // double height: col = q, row = q + 2r
+  assert_eq(h(1, 0).to_doubled(DoubleHeight), Doubled::make(1, 1))
+  assert_eq(h(0, 1).to_doubled(DoubleHeight), Doubled::make(0, 2))
+  // neighbours differ by the doubled steps (col+row even parity)
+  let c = h(2, -1)
+  for n in c.neighbors() {
+    let d = n.to_doubled(DoubleWidth)
+    assert_eq((d.col + d.row) % 2, 0)
+  }
+}
+
+///|
+test "doubled: invalid parity is rejected" {
+  // (0, 1) has odd col+row sum: not a valid double-width coordinate
+  let bad = Doubled::make(0, 1)
+  let outcome : Hex? = Some(bad.to_hex(DoubleWidth)) catch { _ => None }
+  assert_eq(outcome, None)
+}
+
+///|
+test "euclidean distance: edge length and straight-line scaling" {
+  // one step east = sqrt(3) edge lengths (pointy mapping)
+  assert_true(
+    (h(0, 0).euclidean_distance(h(1, 0)) - 1.7320508075688772).abs() <
+    0.000000001,
+  )
+  // N straight steps scale linearly
+  assert_true(
+    (h(0, 0).euclidean_distance(h(3, 0)) - 3.0 * 1.7320508075688772).abs() <
+    0.000000001,
+  )
+  // equals zero for the same cell
+  assert_true(h(2, -3).euclidean_distance(h(2, -3)).abs() < 0.000000000001)
+  // symmetric
+  assert_true(
+    (h(3, -1).euclidean_distance(h(-2, 4)) -
+    h(-2, 4).euclidean_distance(h(3, -1))).abs() <
+    0.000000000001,
+  )
+}
+
+///|
+test "main direction: stepping reduces distance deterministically" {
+  for a in Hex::range(h(0, 0), 3) {
+    for b in Hex::range(h(0, 0), 3) {
+      if a != b {
+        let d = a.main_direction_to(b)
+        assert_true(d >= 0 && d < 6)
+        assert_true(a.distance(b) > a.neighbor(d).distance(b))
+        // ties resolve to the smallest index: recompute manually
+        let mut first_min = 6
+        let mut min_dist = 6
+        for k in 0..<6 {
+          let dist = a.neighbor(k).distance(b)
+          if dist < min_dist {
+            min_dist = dist
+            first_min = k
+          }
+        }
+        assert_eq(d, first_min)
+      }
+    }
+  }
+}
+
+///|
+test "bounds: containment, enumeration and closed-form count" {
+  let b = HexBounds::make(h(2, -1), 3)
+  assert_true(b.is_in_bounds(h(2, -1)))
+  assert_true(b.is_in_bounds(h(2, 2)))
+  assert_false(b.is_in_bounds(h(2, 3)))
+  let cells = b.all_cells()
+  assert_eq(cells.length(), b.length())
+  assert_eq(b.length(), 3 * 3 * 3 + 3 * 3 + 1)
+  // matches Hex::spiral exactly
+  assert_eq(cells, Hex::spiral(h(2, -1), 0, 3))
+  // radius 0 bounds contain only the center
+  let unit = HexBounds::make(h(5, 5), 0)
+  assert_true(unit.is_in_bounds(h(5, 5)))
+  assert_false(unit.is_in_bounds(h(6, 5)))
+  assert_eq(unit.all_cells().length(), 1)
+}
