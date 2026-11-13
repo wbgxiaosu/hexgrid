@@ -4,6 +4,28 @@ All notable changes to this project are documented in this file.
 The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/)
 and the project adheres to [Semantic Versioning](https://semver.org/).
 
+## [0.3.1] - 2026-11-13
+
+### Changed
+
+- Applied the October season's acceptance lessons: large parameters
+  and degenerate inputs are now explicitly verified by the test
+  suite. `Reachability` builds an O(1) `source_set` membership index
+  at construction, removing the linear source-array scan from the
+  flood loop and `path_to` (flood cost no longer scales with the
+  number of sources).
+
+### Added
+
+- Large-parameter stress tests: radius-100 enumeration against
+  closed-form counts, million-scale coordinates and lines, 50-source
+  floods, radius-40 dense map roundtrip, 40x40 ASCII render,
+  radius-100 FOV, and 20 large random wall maps with the full FOV
+  invariant set.
+- Degenerate-input guarantees: empty/duplicate sources, zero-cost
+  budgets, and NaN/negative/zero step costs fail fast in both
+  Dijkstra and A*.
+
 ## [0.3.0] - 2026-11-09
 
 ### Added

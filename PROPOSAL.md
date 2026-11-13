@@ -36,12 +36,12 @@ hexgrid 为 MoonBit 生态补齐平面六角格网格这一通用基础设施，
 - 寻路：单源/多源 Dijkstra 与 A*，自定义步长代价、通行判定、max_cost，路径回溯至最近源；
 - 视野：单向 FOV 与对称 FOV（双向视线），形式化可见性语义 + 边界遮挡/透明度/对称性测试组；
 - 存储与索引：四种区域形状（闭合公式格数）、稀疏 HexMap[T]、密集 DenseHexMap[T]（cell↔index 双向映射）、ASCII 渲染；
-- 质量基建：55 个白盒测试（参考值断言、往返一致性、公理与性质测试、确定性随机地图穷举对称性）；CI 四 job：三后端 `moon check --deny-warn` + `moon build` + `moon test --deny-warn`、`moon fmt --check`、moonc ≥ 0.10.19 断言、独立消费者工程每次 push 验证可安装可用；
-- 发布 mooncakes.io（wbgxiaosu/hexgrid，当前 0.3.0），README 示例覆盖坐标、寻路、视野、地图存储主线。
+- 质量基建：66 个白盒测试（参考值断言、往返一致性、公理与性质测试、确定性随机地图穷举对称性，外加大规模参数压力组与退化输入保证：radius-100 枚举、百万级坐标、50 源泛洪、NaN/负/零步长代价快速失败）；CI 四 job：三后端 `moon check --deny-warn` + `moon build` + `moon test --deny-warn`、`moon fmt --check`、moonc ≥ 0.10.19 断言、独立消费者工程每次 push 验证可安装可用；
+- 发布 mooncakes.io（wbgxiaosu/hexgrid，当前 0.3.1），README 示例覆盖坐标、寻路、视野、地图存储主线。
 
 ## 原创性说明
 
 - 本项目性质：原创项目，全部代码从零编写，未移植、未复制任何现有实现；
 - 参考资料：Red Blob Games《Hexagonal Grids》（免费公开网页，坐标/地图形状/直线算法思想）；对称视野参考 RogueBasin 公开的对称 shadowcasting 思想并适配到六角直线模型；doubled 坐标转换公式出自 Red Blob Games；rust `hexx`（MIT/Apache-2.0 双许可）仅用作功能范围参照清单，未读取、未复制、未移植其任何代码；出处、参考范围与许可逐条记录在 docs/RULES_REFERENCES.md；
 - 查重说明：与 Uber H3（测地六角索引）领域不同、无代码关联；与生态内方格寻路库（moonpath、moonnavkit、moonbit-pathfinding）互补不重叠，对比结论存档于 README "Ecosystem positioning" 一节；
-- 本项目许可证：Apache License 2.0；仓库含 16 个有效功能提交与全绿 CI，mooncakes 已发布 0.1.0–0.3.0 三个版本。
+- 本项目许可证：Apache License 2.0；仓库含 19 个有效功能提交与全绿 CI，mooncakes 已发布 0.1.0–0.3.1 四个版本。

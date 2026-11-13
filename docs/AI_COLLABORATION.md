@@ -43,3 +43,21 @@ quality. The division of work:
 - CI runs: <https://github.com/wbgxiaosu/hexgrid/actions>
 - Duplication-check and reference provenance:
   [RULES_REFERENCES.md](RULES_REFERENCES.md)
+
+## Lessons carried from the October season
+
+The participant's October submission failed acceptance over
+large-parameter crashes and mishandled edge cases (illegal-move
+enumeration at 26 routes, stalemate scoring, split pools with equal
+ranks, negative chips and repeated payouts). For hexgrid those
+lessons were converted into concrete quality gates owned by the
+participant:
+
+- every algorithm is exercised at production-like scale (radius-100
+  enumerations, million-scale coordinates, 50-source floods), not
+  only on toy inputs;
+- degenerate inputs (empty/duplicate sources, zero budgets, NaN or
+  non-positive costs) have specified, tested behaviour instead of
+  undefined hangs;
+- performance cliffs are closed by design (O(1) source membership
+  indexing), and the reasoning is documented in ACCEPTANCE.md.
