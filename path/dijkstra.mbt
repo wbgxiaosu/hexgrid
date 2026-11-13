@@ -82,6 +82,9 @@ pub struct Reachability {
   /// The source cells the flood started from (exactly one for a
   /// single-source flood).
   sources : Array[@hex.Hex]
+  /// Membership index over `sources` for O(1) lookups; kept in sync
+  /// with `sources` at construction time.
+  source_set : Map[@hex.Hex, Bool]
 }
 
 ///|
@@ -103,7 +106,7 @@ pub fn Reachability::path_to(
   }
   let acc : Array[@hex.Hex] = [target]
   let mut cur = target
-  while !self.sources.contains(cur) {
+  while !self.source_set.contains(cur) {
     match self.came_from.get(cur) {
       Some(prev) => {
         acc.push(prev)
@@ -159,8 +162,10 @@ pub fn Reachability::compute_multi(
   let cost : Map[@hex.Hex, Double] = Map([])
   let came_from : Map[@hex.Hex, @hex.Hex] = Map([])
   let frontier : Heap[@hex.Hex] = Heap::new()
+  let source_set : Map[@hex.Hex, Bool] = Map([])
   for source in sources {
     cost[source] = 0.0
+    source_set[source] = true
     frontier.push(0.0, source)
   }
   while frontier.size() > 0 {
@@ -169,7 +174,7 @@ pub fn Reachability::compute_multi(
         let cur_cost = cost.get(current).unwrap_or(0.0)
         for d in 0..<6 {
           let next = current.neighbor(d)
-          if !sources.contains(next) && !passable(next) {
+          if !source_set.contains(next) && !passable(next) {
             continue
           }
           let w = step_cost(current, next)
@@ -197,7 +202,7 @@ pub fn Reachability::compute_multi(
       None => break
     }
   }
-  { cost, came_from, sources, }
+  { cost, came_from, sources, source_set, }
 }
 
 ///|

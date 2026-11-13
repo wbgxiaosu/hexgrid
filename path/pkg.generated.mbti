@@ -17,6 +17,7 @@ pub struct Reachability {
   cost : Map[@hex.Hex, Double]
   came_from : Map[@hex.Hex, @hex.Hex]
   sources : Array[@hex.Hex]
+  source_set : Map[@hex.Hex, Bool]
 }
 pub fn Reachability::compute(@hex.Hex, Double, (@hex.Hex) -> Bool, (@hex.Hex, @hex.Hex) -> Double) -> Self raise
 pub fn Reachability::compute_multi(Array[@hex.Hex], Double, (@hex.Hex) -> Bool, (@hex.Hex, @hex.Hex) -> Double) -> Self raise
